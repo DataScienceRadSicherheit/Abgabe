@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Dynamic Data</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="controls">
+        <label for="table-select">Tabelle auswählen:</label>
+        <select id="table-select">
+            <option value="test" selected>Tabelle 1</option>
+            <option value="table2">Tabelle 2</option>
+        </select>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        // Karte initialisieren
+        const map = L.map('map').setView([51.3397, 12.3731], 13); // Leipzig-Koordinaten
+
+        // OSM-Tiles laden
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        let currentLayerGroup = null;
+
+        // Funktion: Daten aus der Tabelle laden und anzeigen
+        function loadData(table) {
+            if (currentLayerGroup) {
+                map.removeLayer(currentLayerGroup); // Vorherige Layer entfernen
+            }
+
+            axios.get(`https://rad.slini.eu/fwd/api/ways?table=${table}`)
+                .then(response => {
+                    const ways = response.data;
+                    currentLayerGroup = L.layerGroup();
+
+                    ways.forEach(way => {
+                        const latlngs = way.geometry.map(coord => [coord.lat, coord.lon]);
+                        const color = way.active ? 'red' : 'green';
+                        L.polyline(latlngs, { color: color, weight: 5 }).addTo(currentLayerGroup);
+                    });
+
+                    currentLayerGroup.addTo(map);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Beim Laden der Seite die Tabelle 1 laden
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData('test');
+        });
+
+        // Event-Listener für das Dropdown-Menü
+        document.getElementById('table-select').addEventListener('change', (event) => {
+            loadData(event.target.value);
+        });
+    </script>
+</body>
+</html>

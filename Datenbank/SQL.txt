@@ -1,0 +1,40 @@
+CREATE TABLE dataset AS
+SELECT
+    s.id,
+    s.name,
+    s.ref,
+    s.highway,
+    s.surface,
+    s.smoothness,
+    s.maxspeed,
+    s.lanes,
+    s.sidewalk,
+    s.cycleway,
+    s.bicycle,
+    s.hazard,
+    s.width,
+    CASE
+        WHEN u.id IS NOT NULL THEN true
+        ELSE false
+    END AS unfall
+FROM
+    street AS s
+LEFT JOIN (
+    SELECT id
+    FROM unfall
+) AS u
+ON s.id::text = u.id;
+
+
+Ersetzen anzeigen:
+SELECT public."streetNew".id, public."streetNew".surface, t2.surface
+FROM public."streetNew"
+JOIN public."dataLnew" t2 ON public."streetNew".id = t2.id
+WHERE public."streetNew".surface = 'Unbekannt'
+
+Ersetzen:
+UPDATE public."streetNew"
+SET surface = t2.surface
+FROM public."dataLnew" t2
+WHERE public."streetNew".id = t2.id
+  AND public."streetNew".surface = 'Unbekannt';

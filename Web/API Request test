@@ -1,0 +1,16 @@
+[out:json];
+(
+  way(id:1298758278);  // Deine Way-IDs
+);
+out geom;   // Gibt nur die Geometrien der Ways aus, ohne den Circle
+>;
+// Optional: Map-Styles für farbliche Hervorhebung
+{{style:
+  way {
+    color: red;         /* Farbe der Straße */
+    width: 30;           /* Breite der Markierung */
+  }
+  node {
+    display: none;      /* Verhindert die Anzeige von Nodes */
+  }
+}}

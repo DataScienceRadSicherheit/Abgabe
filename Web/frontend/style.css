@@ -1,0 +1,28 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#map {
+    height: calc(100% - 50px); /* Platz für das Dropdown-Menü lassen */
+    width: 100%;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+#controls label {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+#table-select {
+    font-size: 16px;
+    padding: 5px;
+}
