@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map with Dynamic Data</title>
+    <title>SNETZE LIVE3.2</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -13,8 +13,10 @@
     <div id="controls">
         <label for="table-select">Tabelle auswählen:</label>
         <select id="table-select">
-            <option value="test" selected>Tabelle 1</option>
-            <option value="table2">Tabelle 2</option>
+            <option value="xgb" selected>XGBoost</option>
+            <option value="ebm">EBM</option>
+            <option value="catb">CatBoost</option>
+            <option value="rfc">Random Forrest</option>
         </select>
     </div>
     <div id="map"></div>
@@ -37,7 +39,7 @@
                 map.removeLayer(currentLayerGroup); // Vorherige Layer entfernen
             }
 
-            axios.get(`https://rad.slini.eu/fwd/api/ways?table=${table}`)
+            axios.get(`https://rad.slini.eu/api/ways?table=${table}`)
                 .then(response => {
                     const ways = response.data;
                     currentLayerGroup = L.layerGroup();
